@@ -32,7 +32,6 @@ min(rete1619_clean_deg)   #the minimum degree is 1
 hist(rete1619_clean_deg, col="lightblue", xlim=c(1, 483), xlab="degree", ylab="Frequency")  #very skewed
 
 
-
 #check weigth distribution
 weights1215_clean<-E(rete1215_clean)$weight
 mean(weights1215_clean)  #the mean weight is 1.15
@@ -59,10 +58,8 @@ par(mfrow=c(1,2))
 hist(weights1619_clean, col="lightblue", xlim=c(1, 16), xlab="edge weight", ylab="Frequency", main="edge weight distribution")   
 hist(strength1619_clean, col="lightblue", xlim=c(1, 869), xlab="vertex strength", ylab="Frequency", main="vertex strength distribution")   
 
-diameter(rete1215_clean)  #the diameter (shortest longest distance) is 18
 mean_distance(rete1215_clean)   # The average of all shortest paths 3.06
 
-diameter(rete1619_clean)  #the diameter (shortest longest distance) is 28
 mean_distance(rete1619_clean)   # The average of all shortest paths 9.16
 
 
@@ -71,7 +68,6 @@ transitivity(rete1215_clean, type = "global")     #Global Transitivity (clusteri
 
 transitivity(rete1619_clean, type = "global")     #Global Transitivity (clustering coefficient) it is 0.50
 #transitivity(rete1619, type = "local")      # local transitivity for each node
-
 
 
 #centrality scores and ego networks of central nodes
