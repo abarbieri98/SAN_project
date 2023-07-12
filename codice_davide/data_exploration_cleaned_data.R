@@ -17,7 +17,6 @@ edge_density(rete1619_clean)  # the density is 0.001, the network  is very spars
 
 #plot(rete1215, vertex.size=8, vertex.label="", edge.width=0.8, edge.arrow.size=0.2)
 #plot(rete1619, vertex.size=8, vertex.label="", edge.width=0.8, edge.arrow.size=0.2)
-?edge_density
 
 rete1215_clean_deg <- degree(rete1215_clean, mode="all")  #only total degree is considered since the graph is undirected
 mean(rete1215_clean_deg)  #the mean degree is 6.49
@@ -97,27 +96,39 @@ for (i in 1:10){
 #the same author has the highest degree centrality in both datasets id 6508086535
 #the 2nd author in 1215 is seventh in 1619 id 24332388800
 get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[2]) #get the info about node in both top ten
-get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1619[7]) #get the info about node in both top ten
+get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619[7]) #get the info about node in both top ten
 
 
 get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[1]) #get the info about most central node
 get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619[1]) #get the info about most central node
 
+mean(get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215, name = "h_index")) #36.7 
+mean(get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215, name = "academic_range")) #32
+
+mean(get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619, name = "h_index")) #31.1 
+mean(get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619, name = "academic_range")) #21.7
+
+
+
 
 # ego network considering node present in both top 10
 rete1215_clean_ego_degree <- induced.subgraph(rete1215_clean, neighborhood(rete1215_clean, order= 1, nodes= top10_degree_1215[2]) [[1]])
-transitivity(rete1215_clean, type = "local", vids = top10_degree_1215[1])  #local clustering coefficient of node is 0.195, so 19.5% of neighbour nodes with distance 1 are linked
+transitivity(rete1215_clean, type = "local", vids = top10_degree_1215[2])  #local clustering coefficient of node is 0.35, so 35% of neighbour nodes with distance 1 are linked
 
 rete1619_clean_ego_degree <- induced.subgraph(rete1619_clean, neighborhood(rete1619_clean, order= 1, nodes= top10_degree_1619[7]) [[1]])
-transitivity(rete1619_clean, type = "local", vids = top10_degree_1619[1])  #local clustering coefficient of most central is 0.025, so 2.5% of neighbour nodes with distance 1 are linked
+transitivity(rete1619_clean, type = "local", vids = top10_degree_1619[7])  #local clustering coefficient of most central is 0.09, so 9% of neighbour nodes with distance 1 are linked
 
-#ego networks of nodes with highest degree centrality in 1215 and 1619
+dev.off()
+#ego networks of node present in both top10
 library(RColorBrewer)
-pal <- brewer.pal(length(unique(V(rete1215_clean)$ssd)), "Set3") #create color palette
-par(mfrow=c(1,2))
-plot(rete1215_clean_ego_degree, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, main="24332388800 in 12/15", vertex.color = pal[as.numeric(as.factor(V(rete1215_clean)$ssd))])
-plot(rete1619_clean_ego_degree, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, main="24332388800 in 16/19", vertex.color = pal[as.numeric(as.factor(V(rete1215_clean)$ssd))])
-#legend("bottomleft", bty = "n", legend=levels(as.factor(V(rete1215_clean)$ssd)), fill=pal, border=NA)
+pal <- brewer.pal(length(unique(V(rete1215_clean_ego_degree)$ssd)), "Set3") #create color palette
+plot(rete1215_clean_ego_degree, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, vertex.color = pal[as.numeric(as.factor(V(rete1215_clean_ego_degree)$ssd))])
+legend("topleft", bty = "n", legend=levels(as.factor(V(rete1215_clean_ego_degree)$ssd)), fill=pal, border=NA)
+
+pal <- brewer.pal(length(unique(V(rete1619_clean_ego_degree)$ssd)), "Set3") #create color palette
+plot(rete1619_clean_ego_degree, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, vertex.color = pal[as.numeric(as.factor(V(rete1619_clean_ego_degree)$ssd))])
+legend("topleft", bty = "n", legend=levels(as.factor(V(rete1619_clean_ego_degree)$ssd)), fill=pal, border=NA)
+
 
 #check the node with highest betweenness centrality
 top10_betweenness_1215<-order(degree_centrality_rete1215_clean, decreasing=TRUE)[1:10]  #get 10 highest degree centrality
@@ -131,7 +142,7 @@ for (i in 1:10){
   }  
 }
 #the same author has the highest degree centrality in both datasets id 6508086535
-#the 4th author in 1215 is seventh in 1619 id 24332388800
+#the 2nd author in 1215 is seventh in 1619 id 24332388800
 #they are both the same
 top10_betweenness_1215==top10_degree_1215
 top10_betweenness_1619==top10_degree_1619
@@ -163,6 +174,10 @@ ei(rete1619_clean, vattr="h_fact") #0.36
 ei(rete1215_clean, vattr="academic_fact") #0.48  #heterophily
 ei(rete1619_clean, vattr="academic_fact") #0.45
 
+?assortativity
+assortativity_nominal(rete1215_clean, types = as.factor(V(rete1215_clean)$ssd))
+assortativity_nominal(rete1215_clean, types = as.factor(V(rete1215_clean)$h_fact))
+assortativity_nominal(rete1215_clean, types = as.factor(V(rete1215_clean)$academic_fact))
 
 
 table(get.vertex.attribute(rete1619_clean, name ="academic_fact"))
