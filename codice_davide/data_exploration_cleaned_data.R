@@ -96,7 +96,9 @@ for (i in 1:10){
 }
 #the same author has the highest degree centrality in both datasets id 6508086535
 #the 2nd author in 1215 is seventh in 1619 id 24332388800
-get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1619[2]) #get the info about node in both top ten
+get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[2]) #get the info about node in both top ten
+get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1619[7]) #get the info about node in both top ten
+
 
 get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[1]) #get the info about most central node
 get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619[1]) #get the info about most central node
