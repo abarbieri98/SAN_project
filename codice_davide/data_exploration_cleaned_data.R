@@ -1,15 +1,15 @@
 library(sand) 
 setwd("/home/davide/università/statistical analysis of networks/project")
 
-
-rete1215_clean<-readRDS("rete1215_clean.rds")
+rete1215_clean<-readRDS("rete1215_clean_update.rds")
+#rete1215_clean<-readRDS("rete1215_clean.rds")
 rete1619_clean<-readRDS("rete1619_clean.rds")
 
 #in the cleaned data researchers without a direct connection to the statisticians are removed
 
-vcount(rete1215_clean)    # the number of nodes is 1419
-ecount(rete1215_clean)    # the number of edges 4606
-edge_density(rete1215_clean)  # the density is 0.004, the network  is very sparse
+vcount(rete1215_clean)    # the number of nodes is 4460
+ecount(rete1215_clean)    # the number of edges 18631
+edge_density(rete1215_clean)  # the density is 0.001, the network  is very sparse
 
 vcount(rete1619_clean)    # the number of nodes is 8085
 ecount(rete1619_clean)    # the number of edges 38173
@@ -19,10 +19,10 @@ edge_density(rete1619_clean)  # the density is 0.001, the network  is very spars
 #plot(rete1619, vertex.size=8, vertex.label="", edge.width=0.8, edge.arrow.size=0.2)
 
 rete1215_clean_deg <- degree(rete1215_clean, mode="all")  #only total degree is considered since the graph is undirected
-mean(rete1215_clean_deg)  #the mean degree is 6.49
-max(rete1215_clean_deg)   #the maximum degree is 56
+mean(rete1215_clean_deg)  #the mean degree is 8.35
+max(rete1215_clean_deg)   #the maximum degree is 94
 min(rete1215_clean_deg)   #the minimum degree is 0
-hist(rete1215_clean_deg, col="lightblue", xlim=c(0, 56), xlab="degree", ylab="Frequency", main="")   
+hist(rete1215_clean_deg, col="lightblue", xlim=c(0, 94), xlab="degree", ylab="Frequency", main="")   
 sum(rete1215_clean_deg==0) #get the number of isolated nodes (just one)
 
   
@@ -35,12 +35,12 @@ hist(rete1619_clean_deg, breaks = 60, col="lightblue", xlim=c(1, 483), xlab="deg
 
 #check weigth distribution
 weights1215_clean<-E(rete1215_clean)$weight
-mean(weights1215_clean)  #the mean weight is 1.15
-max(weights1215_clean)   #the maximum weight is 16 
+mean(weights1215_clean)  #the mean weight is 1.30
+max(weights1215_clean)   #the maximum weight is 29 
 min(weights1215_clean)   #the minimum weight is 1 
 strength1215_clean<-graph.strength(rete1215_clean, vids=V(rete1215_clean), weights = weights1215_clean) #get the sum of all the weights of a single node
-mean(strength1215_clean)  #the mean strength is 7.52
-max(strength1215_clean)   #the maximum strength is 70 
+mean(strength1215_clean)  #the mean strength is 10.93
+max(strength1215_clean)   #the maximum strength is 157 
 min(strength1215_clean)   #the minimum strength is 0
 #maybe a logharitmic scale would be better
 par(mfrow=c(1,2))
@@ -60,11 +60,11 @@ hist(weights1619_clean, col="lightblue", xlim=c(1, 16), xlab="edge weight", ylab
 hist(strength1619_clean, col="lightblue", xlim=c(1, 869), xlab="vertex strength", ylab="Frequency", main="vertex strength distribution")   
 
 
-mean_distance(rete1215_clean)   # The average of all shortest paths 3.06
+mean_distance(rete1215_clean)   # The average of all shortest paths 11.67
 mean_distance(rete1619_clean)   # The average of all shortest paths 9.16
 
 
-transitivity(rete1215_clean, type = "global")     #Global Transitivity (clustering coefficient) it is 0.86
+transitivity(rete1215_clean, type = "global")     #Global Transitivity (clustering coefficient) it is 0.66
 #transitivity(rete1215, type = "local")      # local transitivity for each node
 
 transitivity(rete1619_clean, type = "global")     #Global Transitivity (clustering coefficient) it is 0.50
@@ -89,21 +89,22 @@ top10_degree_1619<-order(degree_centrality_rete1619_clean, decreasing=TRUE)[1:10
 for (i in 1:10){
   for (j in 1:10){
     if (get.vertex.attribute(graph=rete1215_clean, name="name", index=top10_degree_1215[i])==get.vertex.attribute(graph=rete1619_clean, name="name", index=top10_degree_1619[j])){
-      print(paste0(i, "=", j, " id ", get.vertex.attribute(graph=rete1215_clean, name="name", index=i)))
+      print(paste0(i, "=", j, " id ", get.vertex.attribute(graph=rete1215_clean, name="name", index=top10_degree_1215[i])))
     }
   }  
 }
-#the same author has the highest degree centrality in both datasets id 6508086535
-#the 2nd author in 1215 is seventh in 1619 id 24332388800
-get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[2]) #get the info about node in both top ten
+#the 3rd author in 1215 is seventh in 1619 id 6602790290
+#the 5th author in 1215 is sixth in 1619 id 24921727400
+
+get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[3]) #get the info about node in both top ten
 get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619[7]) #get the info about node in both top ten
 
 
 get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[1]) #get the info about most central node
 get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619[1]) #get the info about most central node
 
-mean(get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215, name = "h_index")) #36.7 
-mean(get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215, name = "academic_range")) #32
+mean(get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215, name = "h_index")) #24.4 
+mean(get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215, name = "academic_range")) #27.6
 
 mean(get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619, name = "h_index")) #31.1 
 mean(get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619, name = "academic_range")) #21.7
@@ -112,8 +113,8 @@ mean(get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619, name = 
 
 
 # ego network considering node present in both top 10
-rete1215_clean_ego_degree <- induced.subgraph(rete1215_clean, neighborhood(rete1215_clean, order= 1, nodes= top10_degree_1215[2]) [[1]])
-transitivity(rete1215_clean, type = "local", vids = top10_degree_1215[2])  #local clustering coefficient of node is 0.35, so 35% of neighbour nodes with distance 1 are linked
+rete1215_clean_ego_degree <- induced.subgraph(rete1215_clean, neighborhood(rete1215_clean, order= 1, nodes= top10_degree_1215[3]) [[1]])
+transitivity(rete1215_clean, type = "local", vids = top10_degree_1215[2])  #local clustering coefficient of node is 0.09, so 35% of neighbour nodes with distance 1 are linked
 
 rete1619_clean_ego_degree <- induced.subgraph(rete1619_clean, neighborhood(rete1619_clean, order= 1, nodes= top10_degree_1619[7]) [[1]])
 transitivity(rete1619_clean, type = "local", vids = top10_degree_1619[7])  #local clustering coefficient of most central is 0.09, so 9% of neighbour nodes with distance 1 are linked
@@ -137,12 +138,11 @@ top10_betweenness_1619<-order(degree_centrality_rete1619_clean, decreasing=TRUE)
 for (i in 1:10){
   for (j in 1:10){
     if (get.vertex.attribute(graph=rete1215_clean, name="name", index=top10_betweenness_1215[i])==get.vertex.attribute(graph=rete1619_clean, name="name", index=top10_betweenness_1619[j])){
-      print(paste0(i, "=", j, " id ", get.vertex.attribute(graph=rete1215_clean, name="name", index=i)))
+      print(paste0(i, "=", j, " id ", get.vertex.attribute(graph=rete1215_clean, name="name", index=top10_betweenness_1215[i])))
     }
   }  
 }
-#the same author has the highest degree centrality in both datasets id 6508086535
-#the 2nd author in 1215 is seventh in 1619 id 24332388800
+
 #they are both the same
 top10_betweenness_1215==top10_degree_1215
 top10_betweenness_1619==top10_degree_1619
@@ -150,9 +150,9 @@ top10_betweenness_1619==top10_degree_1619
 
 
 #2)Network decomposition
-count_components(rete1215_clean)  #there are 185 components in the graph
-comps1215 <- decompose.graph(rete1215_clean) #get the 185 components
-table(sapply(comps1215, vcount))  #get the distributions of components size, no giant component 
+count_components(rete1215_clean)  #there are 88 components in the graph
+comps1215 <- decompose.graph(rete1215_clean) #get the 8 components
+table(sapply(comps1215, vcount))  #get the distributions of components size, giant component of 3604 (out of 4460)  
 
 count_components(rete1619_clean)  #there are 82 components in the graph
 comps1619 <- decompose.graph(rete1619_clean) #get the 82 components
@@ -165,21 +165,13 @@ rete1619_clean_giant <-comps1619[[2]]
 library(netseg) #to calculate the ei index
 
 
-ei(rete1215_clean, vattr="ssd") #-0.43   #homophily
+ei(rete1215_clean, vattr="ssd") #-0.46   #homophily
 ei(rete1619_clean, vattr="ssd") #-0.51   #homophily
 
-ei(rete1215_clean, vattr="h_fact") #0.35 #heterophily
+ei(rete1215_clean, vattr="h_fact") #0.36 #heterophily
 ei(rete1619_clean, vattr="h_fact") #0.36
 
-ei(rete1215_clean, vattr="academic_fact") #0.48  #heterophily
+ei(rete1215_clean, vattr="academic_fact") #0.44  #heterophily
 ei(rete1619_clean, vattr="academic_fact") #0.45
-
-?assortativity
-assortativity_nominal(rete1215_clean, types = as.factor(V(rete1215_clean)$ssd))
-assortativity_nominal(rete1215_clean, types = as.factor(V(rete1215_clean)$h_fact))
-assortativity_nominal(rete1215_clean, types = as.factor(V(rete1215_clean)$academic_fact))
-
-
-table(get.vertex.attribute(rete1619_clean, name ="academic_fact"))
 
 
