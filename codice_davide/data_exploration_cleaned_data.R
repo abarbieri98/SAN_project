@@ -2,10 +2,13 @@ library(sand)
 setwd("/home/davide/università/statistical analysis of networks/project")
 
 rete1215_clean<-readRDS("rete1215_clean_update.rds")
-#rete1215_clean<-readRDS("rete1215_clean.rds")
+#rete1215_clean<-readRDS("rete1215_update.rds")
 rete1619_clean<-readRDS("rete1619_clean.rds")
 
 #in the cleaned data researchers without a direct connection to the statisticians are removed
+#distribution of ssd
+table(get.vertex.attribute(rete1215_clean, name = "ssd")) 
+table(get.vertex.attribute(rete1619_clean, name = "ssd"))
 
 vcount(rete1215_clean)    # the number of nodes is 4460
 ecount(rete1215_clean)    # the number of edges 18631
@@ -22,7 +25,9 @@ rete1215_clean_deg <- degree(rete1215_clean, mode="all")  #only total degree is 
 mean(rete1215_clean_deg)  #the mean degree is 8.35
 max(rete1215_clean_deg)   #the maximum degree is 94
 min(rete1215_clean_deg)   #the minimum degree is 0
+jpeg("deg_hist_1215.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 hist(rete1215_clean_deg, col="lightblue", xlim=c(0, 94), xlab="degree", ylab="Frequency", main="")   
+dev.off()
 sum(rete1215_clean_deg==0) #get the number of isolated nodes (just one)
 
   
@@ -30,7 +35,9 @@ rete1619_clean_deg <- degree(rete1619_clean, mode="all")  #only total degree is 
 mean(rete1619_clean_deg)  #the mean degree is 9.44
 max(rete1619_clean_deg)   #the maximum degree is 483
 min(rete1619_clean_deg)   #the minimum degree is 1 
+jpeg("deg_hist_1619.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 hist(rete1619_clean_deg, breaks = 60, col="lightblue", xlim=c(1, 483), xlab="degree", ylab="Frequency", main="")  #very skewed
+dev.off()
 
 
 #check weigth distribution
@@ -62,7 +69,6 @@ hist(strength1619_clean, col="lightblue", xlim=c(1, 869), xlab="vertex strength"
 
 mean_distance(rete1215_clean)   # The average of all shortest paths 11.67
 mean_distance(rete1619_clean)   # The average of all shortest paths 9.16
-
 
 transitivity(rete1215_clean, type = "global")     #Global Transitivity (clustering coefficient) it is 0.66
 #transitivity(rete1215, type = "local")      # local transitivity for each node
@@ -99,6 +105,10 @@ for (i in 1:10){
 get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[3]) #get the info about node in both top ten
 get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619[7]) #get the info about node in both top ten
 
+get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[5]) #get the info about node in both top ten
+get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619[6]) #get the info about node in both top ten
+
+
 
 get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215[1]) #get the info about most central node
 get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619[1]) #get the info about most central node
@@ -119,16 +129,22 @@ transitivity(rete1215_clean, type = "local", vids = top10_degree_1215[2])  #loca
 rete1619_clean_ego_degree <- induced.subgraph(rete1619_clean, neighborhood(rete1619_clean, order= 1, nodes= top10_degree_1619[7]) [[1]])
 transitivity(rete1619_clean, type = "local", vids = top10_degree_1619[7])  #local clustering coefficient of most central is 0.09, so 9% of neighbour nodes with distance 1 are linked
 
-dev.off()
 #ego networks of node present in both top10
 library(RColorBrewer)
+jpeg("ego_1215.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 pal <- brewer.pal(length(unique(V(rete1215_clean_ego_degree)$ssd)), "Set3") #create color palette
 plot(rete1215_clean_ego_degree, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, vertex.color = pal[as.numeric(as.factor(V(rete1215_clean_ego_degree)$ssd))])
 legend("topleft", bty = "n", legend=levels(as.factor(V(rete1215_clean_ego_degree)$ssd)), fill=pal, border=NA)
+dev.off()
 
+jpeg("ego_1619.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 pal <- brewer.pal(length(unique(V(rete1619_clean_ego_degree)$ssd)), "Set3") #create color palette
 plot(rete1619_clean_ego_degree, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, vertex.color = pal[as.numeric(as.factor(V(rete1619_clean_ego_degree)$ssd))])
 legend("topleft", bty = "n", legend=levels(as.factor(V(rete1619_clean_ego_degree)$ssd)), fill=pal, border=NA)
+dev.off()
+
+get.vertex.attribute(rete1215_clean_ego_degree, index = which(V(rete1215_clean_ego_degree)$ssd != "OTHER"))
+get.vertex.attribute(rete1619_clean_ego_degree, index = which(V(rete1619_clean_ego_degree)$ssd != "OTHER"))
 
 
 #check the node with highest betweenness centrality
@@ -151,7 +167,7 @@ top10_betweenness_1619==top10_degree_1619
 
 #2)Network decomposition
 count_components(rete1215_clean)  #there are 88 components in the graph
-comps1215 <- decompose.graph(rete1215_clean) #get the 8 components
+comps1215 <- decompose.graph(rete1215_clean) #get the 88 components
 table(sapply(comps1215, vcount))  #get the distributions of components size, giant component of 3604 (out of 4460)  
 
 count_components(rete1619_clean)  #there are 82 components in the graph
@@ -159,6 +175,8 @@ comps1619 <- decompose.graph(rete1619_clean) #get the 82 components
 table(sapply(comps1619, vcount))  #get the distributions of components size, giant component of 7146 (out of 8085)
 rete1619_clean_giant <-comps1619[[2]]
 
+table(get.vertex.attribute(rete1619_clean_giant, name="ssd"))
+table(get.vertex.attribute(rete1619_clean, name="ssd"))
 
 #other indexes
 

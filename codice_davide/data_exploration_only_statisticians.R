@@ -1,15 +1,18 @@
 library(sand) 
 
+#
 
 setwd("/home/davide/università/statistical analysis of networks/project")
-rete1215_statistici<-readRDS("final_rete1215_statistici")
+rete1215_statistici<-readRDS("rete1215_clean_statistici_update.rds")
 rete1619_statistici<-readRDS("final_rete1619_statistici")
+
+
 
 #1) global network statistics
 
 
-vcount(rete1215_statistici)    # the number of nodes is 373 (out of 1715)
-ecount(rete1215_statistici)    # the number of edges 215 (out of 5822)
+vcount(rete1215_statistici)    # the number of nodes is 562 (out of 4460)
+ecount(rete1215_statistici)    # the number of edges 573 (out of 18631)
 edge_density(rete1215_statistici)  # the density is 0.003, the network  is very sparse
 
 vcount(rete1619_statistici)    # the number of nodes is 681 (out of 8123)
@@ -22,10 +25,10 @@ edge_density(rete1619_statistici)  # the density is 0.003, the network  is very 
 
 
 rete1215_statistici_deg <- degree(rete1215_statistici, mode="all")  #only total degree is considered since the graph is undirected
-mean(rete1215_statistici_deg)  #the mean degree is 1.15
-max(rete1215_statistici_deg)   #the maximum degree is 6
+mean(rete1215_statistici_deg)  #the mean degree is 2.03
+max(rete1215_statistici_deg)   #the maximum degree is 16
 min(rete1215_statistici_deg)   #the minimum degree is 0
-sum(rete1215_statistici_deg==0) #get the number of isolated nodes 117
+sum(rete1215_statistici_deg==0) #get the number of isolated nodes 108
 hist(rete1215_statistici_deg, col="lightblue", xlim=c(0, 6), xlab="degree", ylab="Frequency")
 
 
@@ -39,12 +42,12 @@ hist(rete1619_statistici_deg, col="lightblue", xlim=c(0, 20), xlab="degree", yla
 
 #check weigth distribution
 weights1215_statistici<-E(rete1215_statistici)$weight
-mean(weights1215_statistici)  #the mean weight is 1.44
-max(weights1215_statistici)   #the maximum weight is 16 
+mean(weights1215_statistici)  #the mean weight is 2.38
+max(weights1215_statistici)   #the maximum weight is 20
 min(weights1215_statistici)   #the minimum weight is 1 
 strength1215_statistici<-graph.strength(rete1215_statistici, vids=V(rete1215_statistici), weights = weights1215_statistici) #get the sum of all the weights of a single node
-mean(strength1215_statistici)  #the mean strength is 1.66
-max(strength1215_statistici)   #the maximum strength is 18 
+mean(strength1215_statistici)  #the mean strength is 4.86
+max(strength1215_statistici)   #the maximum strength is 48 
 min(strength1215_statistici)   #the minimum strength is 0
 #maybe a logharitmic scale would be better
 par(mfrow=c(1,2))
@@ -64,12 +67,12 @@ hist(weights1619_statistici, col="lightblue", xlim=c(1, 21), xlab="edge weight",
 hist(strength1619_statistici, col="lightblue", xlim=c(1, 45), xlab="vertex strength", ylab="Frequency", main="vertex strength distribution")   
 #in both cases the mean weight is higher but the strength is lower, so...
 
-mean_distance(rete1215_statistici)   # The average of all shortest paths 4.14
+mean_distance(rete1215_statistici)   # The average of all shortest paths 17.66
 
 mean_distance(rete1619_statistici)   # The average of all shortest paths 9.70
 
 
-transitivity(rete1215_statistici, type = "global")     #Global Transitivity (clustering coefficient) it is 0.51
+transitivity(rete1215_statistici, type = "global")     #Global Transitivity (clustering coefficient) it is 0.37
 #transitivity(rete1215, type = "local")      # local transitivity for each node
 
 transitivity(rete1619_statistici, type = "global")     #Global Transitivity (clustering coefficient) it is 0.36
@@ -91,7 +94,7 @@ top10_degree_1619_statistici<-order(degree_centrality_rete1619_statistici, decre
 for (i in 1:10){
   for (j in 1:10){
     if (get.vertex.attribute(graph=rete1215_statistici, name="name", index=top10_degree_1215_statistici[i])==get.vertex.attribute(graph=rete1619_statistici, name="name", index=top10_degree_1619_statistici[j])){
-      print(paste0(i, "=", j, " id ", get.vertex.attribute(graph=rete1215_statistici, name="name", index=i)))
+      print(paste0(i, "=", j, " id ", get.vertex.attribute(graph=rete1215_statistici, name="name", index=top10_degree_1215_statistici[i])))
     }
   }  
 }
@@ -127,9 +130,9 @@ top10_betweenness_1215_statistici==top10_degree_1215_statistici
 top10_betweenness_1619_statistici==top10_degree_1619_statistici
 
 
-count_components(rete1215_statistici)  #there are 199 components in the graph
-comps1215_statistici <- decompose.graph(rete1215_statistici) #get the 199 components
-table(sapply(comps1215_statistici, vcount))  #get the distributions of components size, no giant component, 117 isolated out of(373) 
+count_components(rete1215_statistici)  #there are 165 components in the graph
+comps1215_statistici <- decompose.graph(rete1215_statistici) #get the 165 components
+table(sapply(comps1215_statistici, vcount))  #get the distributions of components size, giant component 281/562
 
 count_components(rete1619_statistici)  #there are 154 components in the graph
 comps1619_statistici <- decompose.graph(rete1619_statistici) #get the 154 components
@@ -155,7 +158,7 @@ ei(rete1619_statistici, vattr="ssd") #-0.44
 
 
 #role only in statisticians data because for others the role is unknown
-ei(rete1215_statistici, vattr="role") #0.58 heterophily
+ei(rete1215_statistici, vattr="role") #0.54 heterophily
 ei(rete1619_statistici, vattr="role") #0.42 heterophily
 
 ei(rete1215_statistici)
@@ -163,7 +166,7 @@ ei(rete1215_statistici)
 list.vertex.attributes(rete1619_statistici)
 
 
-ei(rete1215_statistici, vattr="h_fact") #0.18 #heterophily
+ei(rete1215_statistici, vattr="h_fact") #0.20 #heterophily
 ei(rete1619_statistici, vattr="h_fact") #0.27
 
 table(get.vertex.attribute(rete1215_statistici, name ="h_fact"))
@@ -175,4 +178,7 @@ ei(rete1619_statistici, vattr="academic_fact") #0.44
 
 table(get.vertex.attribute(rete1215_statistici, name ="academic_fact"))
 table(get.vertex.attribute(rete1619_statistici, name ="academic_fact"))
+
+
+
 
