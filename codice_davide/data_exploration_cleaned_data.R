@@ -25,7 +25,7 @@ rete1215_clean_deg <- degree(rete1215_clean, mode="all")  #only total degree is 
 mean(rete1215_clean_deg)  #the mean degree is 8.35
 max(rete1215_clean_deg)   #the maximum degree is 94
 min(rete1215_clean_deg)   #the minimum degree is 0
-jpeg("deg_hist_1215.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
+#jpeg("deg_hist_1215.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 hist(rete1215_clean_deg, col="lightblue", xlim=c(0, 94), xlab="degree", ylab="Frequency", main="")   
 dev.off()
 sum(rete1215_clean_deg==0) #get the number of isolated nodes (just one)
@@ -35,7 +35,7 @@ rete1619_clean_deg <- degree(rete1619_clean, mode="all")  #only total degree is 
 mean(rete1619_clean_deg)  #the mean degree is 9.44
 max(rete1619_clean_deg)   #the maximum degree is 483
 min(rete1619_clean_deg)   #the minimum degree is 1 
-jpeg("deg_hist_1619.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
+#jpeg("deg_hist_1619.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 hist(rete1619_clean_deg, breaks = 60, col="lightblue", xlim=c(1, 483), xlab="degree", ylab="Frequency", main="")  #very skewed
 dev.off()
 
@@ -80,16 +80,19 @@ transitivity(rete1619_clean, type = "global")     #Global Transitivity (clusteri
 #centrality scores and ego networks of central nodes
 degree_centrality_rete1215_clean<-as.vector(degree(rete1215_clean, normalized = T))  #compute the degree centrality of every node
 betweenness_centrality_rete1215_clean<-as.vector(betweenness(rete1215_clean, normalized = T, weights = E(rete1215_clean)$weight)) #compute the betweenness centrality of every node
-#eigen_centrality_rete1215_clean<-as.vector(eigen_centrality(rete1215_clean, (rete1215_clean)$weight))  #compute the degree centrality of every node
 
 #centrality scores and ego networks of central nodes
 degree_centrality_rete1619_clean<-as.vector(degree(rete1619_clean, normalized = T))  #compute the degree centrality of every node
 betweenness_centrality_rete1619_clean<-as.vector(betweenness(rete1619_clean, normalized = T)) #compute the betweenness centrality of every node
-#eigen_centrality_rete1619_clean<-as.vector(eigen_centrality(rete1619_clean, weights=(rete1619_clean)$weight))  #compute the degree centrality of every node
 
 #check the node with highest degree centrality
 top10_degree_1215<-order(degree_centrality_rete1215_clean, decreasing=TRUE)[1:10]  #get 10 highest degree centrality
 top10_degree_1619<-order(degree_centrality_rete1619_clean, decreasing=TRUE)[1:10]  #get 10 highest degree centrality
+
+#get the ssd of the nodes in top ten
+table(get.vertex.attribute(graph=rete1215_clean, index=top10_degree_1215, name = "ssd"))
+table(get.vertex.attribute(graph=rete1619_clean, index=top10_degree_1619, name = "ssd")) 
+
 
 #check if a name is present in both top10 independently of positions
 for (i in 1:10){
@@ -131,13 +134,13 @@ transitivity(rete1619_clean, type = "local", vids = top10_degree_1619[7])  #loca
 
 #ego networks of node present in both top10
 library(RColorBrewer)
-jpeg("ego_1215.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
+#jpeg("ego_1215.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 pal <- brewer.pal(length(unique(V(rete1215_clean_ego_degree)$ssd)), "Set3") #create color palette
 plot(rete1215_clean_ego_degree, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, vertex.color = pal[as.numeric(as.factor(V(rete1215_clean_ego_degree)$ssd))])
 legend("topleft", bty = "n", legend=levels(as.factor(V(rete1215_clean_ego_degree)$ssd)), fill=pal, border=NA)
 dev.off()
 
-jpeg("ego_1619.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
+#jpeg("ego_1619.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 pal <- brewer.pal(length(unique(V(rete1619_clean_ego_degree)$ssd)), "Set3") #create color palette
 plot(rete1619_clean_ego_degree, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, vertex.color = pal[as.numeric(as.factor(V(rete1619_clean_ego_degree)$ssd))])
 legend("topleft", bty = "n", legend=levels(as.factor(V(rete1619_clean_ego_degree)$ssd)), fill=pal, border=NA)
@@ -191,5 +194,9 @@ ei(rete1619_clean, vattr="h_fact") #0.36
 
 ei(rete1215_clean, vattr="academic_fact") #0.44  #heterophily
 ei(rete1619_clean, vattr="academic_fact") #0.45
+
+
+
+
 
 

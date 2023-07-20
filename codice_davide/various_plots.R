@@ -28,10 +28,9 @@ legend("topleft", bty = "n", legend=levels(as.factor(V(rete1619)$ssd)), fill=pal
 #too slow... and result is ugly
 #plot(rete1619, layout = mds_layout_adj, vertex.size=0.4*degree(rete1619), vertex.label="", edge.width=E(rete1619)$Weight, vertex.color = pal[as.numeric(as.factor(V(rete1619)$ssd))])
 
-?jpeg
 
 #other layouts
-jpeg("rete1215_clean_kk.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
+#jpeg("rete1215_clean_kk.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 pal <- brewer.pal(length(unique(V(rete1215)$ssd)), "Set3") #create color palette
 plot(rete1215, layout=layout_with_kk, vertex.size=4, vertex.label="", edge.width=E(rete1215)$Weight, vertex.color = pal[as.numeric(as.factor(V(rete1215)$ssd))])
 legend("topleft", bty = "n", legend=levels(as.factor(V(rete1215)$ssd)), fill=pal, border=NA)
@@ -40,7 +39,7 @@ dev.off()
 #to change also the size of the vertexes
 #plot(rete1215, layout = mds_layout_adj, vertex.size=degree(rete1215), vertex.label="", edge.width=E(rete1215)$Weight, vertex.color = pal[as.numeric(as.factor(V(rete1215)$ssd))])
 
-jpeg("rete1619_clean_kk.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
+#jpeg("rete1619_clean_kk.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 pal <- brewer.pal(length(unique(V(rete1619)$ssd)), "Set3") #create color palette
 plot(rete1619, layout=layout_with_kk, vertex.size=4, vertex.label="", edge.width=E(rete1215)$Weight, vertex.color = pal[as.numeric(as.factor(V(rete1619)$ssd))])
 legend("topleft", bty = "n", legend=levels(as.factor(V(rete1619)$ssd)), fill=pal, border=NA)
@@ -70,7 +69,7 @@ legend("topleft", bty = "n", legend=levels(as.factor(V(rete1619_statistici)$ssd)
 
 
 #other layouts
-jpeg("rete1215_statistici_kk.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
+#jpeg("rete1215_statistici_kk.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 pal <- brewer.pal(length(unique(V(rete1215_statistici)$ssd)), "Set3") #create color palette
 plot(rete1215_statistici, layout=layout_with_kk, vertex.size=4, vertex.label="", edge.width=E(rete1215)$Weight, vertex.color = pal[as.numeric(as.factor(V(rete1215_statistici)$ssd))])
 legend("topleft", bty = "n", legend=levels(as.factor(V(rete1215_statistici)$ssd)), fill=pal, border=NA)
@@ -79,7 +78,7 @@ dev.off()
 #to change also the size of the vertexes
 #plot(rete1215, layout = mds_layout_adj, vertex.size=degree(rete1215), vertex.label="", edge.width=E(rete1215)$Weight, vertex.color = pal[as.numeric(as.factor(V(rete1215)$ssd))])
 
-jpeg("rete1619_statistici_kk.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
+#jpeg("rete1619_statistici_kk.jpeg", width = 2000, height = 1800, res = 200, quality = 100, pointsize = 20)
 pal <- brewer.pal(length(unique(V(rete1619_statistici)$ssd)), "Set3") #create color palette
 plot(rete1619_statistici, layout=layout_with_kk, vertex.size=4, vertex.label="", edge.width=E(rete1215)$Weight, vertex.color = pal[as.numeric(as.factor(V(rete1619_statistici)$ssd))])
 legend("topleft", bty = "n", legend=levels(as.factor(V(rete1619_statistici)$ssd)), fill=pal, border=NA)

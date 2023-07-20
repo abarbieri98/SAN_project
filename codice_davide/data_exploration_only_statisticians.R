@@ -1,7 +1,5 @@
 library(sand) 
 
-#
-
 setwd("/home/davide/università/statistical analysis of networks/project")
 rete1215_statistici<-readRDS("rete1215_clean_statistici_update.rds")
 rete1619_statistici<-readRDS("final_rete1619_statistici")
@@ -29,7 +27,7 @@ mean(rete1215_statistici_deg)  #the mean degree is 2.03
 max(rete1215_statistici_deg)   #the maximum degree is 16
 min(rete1215_statistici_deg)   #the minimum degree is 0
 sum(rete1215_statistici_deg==0) #get the number of isolated nodes 108
-hist(rete1215_statistici_deg, col="lightblue", xlim=c(0, 6), xlab="degree", ylab="Frequency")
+hist(rete1215_statistici_deg, col="lightblue", xlim=c(0, 16), xlab="degree", ylab="Frequency")
 
 
 rete1619_statistici_deg <- degree(rete1619_statistici, mode="all")  #only total degree is considered since the graph is undirected
@@ -52,7 +50,7 @@ min(strength1215_statistici)   #the minimum strength is 0
 #maybe a logharitmic scale would be better
 par(mfrow=c(1,2))
 hist(weights1215_statistici, col="lightblue", xlim=c(1, 16), xlab="edge weight", ylab="Frequency", main="edge weight distribution")   
-hist(strength1215_statistici, col="lightblue", xlim=c(0, 18), xlab="vertex strength", ylab="Frequency", main="vertex strength distribution")   
+hist(strength1215_statistici, col="lightblue", xlim=c(0, 48), xlab="vertex strength", ylab="Frequency", main="vertex strength distribution")   
 
 weights1619_statistici<-E(rete1619_statistici)$weight
 mean(weights1619_statistici)  #the mean weight is 2.09
@@ -138,6 +136,7 @@ count_components(rete1619_statistici)  #there are 154 components in the graph
 comps1619_statistici <- decompose.graph(rete1619_statistici) #get the 154 components
 table(sapply(comps1619_statistici, vcount))  #get the distributions of components size, giant component of 463 (out of 681) and 123 isolated
 
+rete1619_statistici_giant<-comps1619_statistici[[4]]
 #in the complete dataset there are no isolated nodes and in the statistician case there are many
 #is it because there are way more others than statistician (and) or because statistician tend to collaborate less with each other?
 
@@ -152,18 +151,10 @@ library(netseg) #to calculate the ei index
 table(get.vertex.attribute(graph=rete1215, name="h_index")) 
 #table(get.vertex.attribute(graph=rete1215_statistici, name="h_index")) #the highest h-index is for non statistician (upt to 58 vs up to 164)
 
-ei(rete1215_statistici, vattr="ssd") #-0.61 homophily
+ei(rete1215_statistici, vattr="ssd") #-0.63 homophily
 ei(rete1619_statistici, vattr="ssd") #-0.44
 #so statisticians tend to work with other statisticians belonging to same sector
 
-
-#role only in statisticians data because for others the role is unknown
-ei(rete1215_statistici, vattr="role") #0.54 heterophily
-ei(rete1619_statistici, vattr="role") #0.42 heterophily
-
-ei(rete1215_statistici)
-
-list.vertex.attributes(rete1619_statistici)
 
 
 ei(rete1215_statistici, vattr="h_fact") #0.20 #heterophily
@@ -173,12 +164,23 @@ table(get.vertex.attribute(rete1215_statistici, name ="h_fact"))
 table(get.vertex.attribute(rete1619_statistici, name ="h_fact"))
 
 
-ei(rete1215_statistici, vattr="academic_fact") #0.33 #heterophily
-ei(rete1619_statistici, vattr="academic_fact") #0.44
+ei(rete1215_statistici, vattr="academic_fact") #0.32 #heterophily
+ei(rete1619_statistici, vattr="academic_fact") #0.34
 
-table(get.vertex.attribute(rete1215_statistici, name ="academic_fact"))
-table(get.vertex.attribute(rete1619_statistici, name ="academic_fact"))
+ei(rete1215_statistici, vattr="role") #0.54 #heterophily
+ei(rete1619_statistici, vattr="role") #0.42
+
+table(get.vertex.attribute(rete1215_statistici, name="role"))
+
+#to measure ei based on pair of attributes instead of all
+#which(V(rete1215_statistici)$role=="Associate" | V(rete1215_statistici)$role=="Full professor")  #to select only the nodes with specific attribute
+ei(induced.subgraph(rete1215_statistici, vids=which(V(rete1215_statistici)$role=="Associate" | V(rete1215_statistici)$role=="Full professor")), vattr="role")                       
+
+table(get.vertex.attribute(rete1619_statistici, name="role"))
+ei(induced.subgraph(rete1619_statistici, vids=which(V(rete1619_statistici)$role=="Associate" | V(rete1619_statistici)$role=="Full professor")), vattr="role")                       
+#ei(induced.subgraph(rete1215_statistici, vids=which(V(rete1215_statistici)$ssd=="SECS-S/01" | V(rete1215_statistici)$ssd=="SECS-S/03")), vattr="ssd")                       
 
 
 
 
+                       
