@@ -485,22 +485,22 @@ for (i in 1:10){
     }
   }  
 }
-#the 9t author in 1215 is 3rd in 1619 id 24467831700
+#the 6th author in 1215 is 3rd in 1619 id 12645849000
 
-get.vertex.attribute(graph=rete1215_statistici, index=top10_degree_1215_statistici[9]) 
+#get info about him
+get.vertex.attribute(graph=rete1215_statistici, index=top10_degree_1215_statistici[6]) 
 
+rete1215_ego_degree_statistici <- induced.subgraph(rete1215_statistici, neighborhood(rete1215_statistici, order= 1, nodes= top10_degree_1215_statistici[6]) [[1]])
+transitivity(rete1215_statistici, type = "local", vids = top10_degree_1215_statistici[6])  #local clustering coefficient 0.66
 
 # ego network considering node present in both top 10
 rete1619_ego_degree_statistici <- induced.subgraph(rete1619_statistici, neighborhood(rete1619_statistici, order= 1, nodes= top10_degree_1619_statistici[3]) [[1]])
 transitivity(rete1619_statistici, type = "local", vids = top10_degree_1619_statistici[3])  #local clustering is 0.17,
 
-rete1215_ego_degree_statistici <- induced.subgraph(rete1215_statistici, neighborhood(rete1215_statistici, order= 1, nodes= top10_degree_1215_statistici[9]) [[1]])
-transitivity(rete1215_statistici, type = "local", vids = top10_degree_1215_statistici[9])  #local clustering coefficient 0.66
-
 #ego networks of nodes in both top10
 library(RColorBrewer)
 pal <- brewer.pal(length(unique(V(rete1215_ego_degree_statistici)$ssd)), "Set3") #create color palette
-plot(rete1215_ego_degree_statistici, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, vertex.color = pal[as.numeric(as.factor(V(rete1215_clean_ego_degree)$ssd))])
+plot(rete1215_ego_degree_statistici, vertex.size=4, vertex.label="", edge.width=0.8, edge.arrow.size=0.2, vertex.color = pal[as.numeric(as.factor(V(rete1215_ego_degree_statistici)$ssd))])
 legend("topleft", bty = "n", legend=levels(as.factor(V(rete1215_ego_degree_statistici)$ssd)), fill=pal, border=NA)
 
 pal <- brewer.pal(length(unique(V(rete1619_ego_degree_statistici)$ssd)), "Set3") #create color palette
