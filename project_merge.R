@@ -437,7 +437,6 @@ strength1215_statistici<-graph.strength(rete1215_statistici, vids=V(rete1215_sta
 mean(strength1215_statistici)  #the mean strength is 4.86
 max(strength1215_statistici)   #the maximum strength is 48 
 min(strength1215_statistici)   #the minimum strength is 0
-#maybe a logharitmic scale would be better
 par(mfrow=c(1,2))
 hist(weights1215_statistici, col="lightblue", xlim=c(1, 16), xlab="edge weight", ylab="Frequency", main="edge weight distribution")   
 hist(strength1215_statistici, col="lightblue", xlim=c(0, 48), xlab="vertex strength", ylab="Frequency", main="vertex strength distribution")   
